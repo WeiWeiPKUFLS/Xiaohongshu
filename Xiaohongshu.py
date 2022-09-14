@@ -25,9 +25,21 @@ for pp in paragraphs:
 f.close()
 
 
-
 #抽取图片
 image = soup.find('div', class_ = 'inner').find_all('style')
+#抽取图片的链接
+picUrls = []
+pics = soup.find('div', class_ = 'small-pic').find_all('div')
+for pic in pics:
+    picUrl = 'http:' + pic.find('i', class_ = 'img').get('style')[21:-32]
+    picUrls.append(picUrl)
+for i in picUrls:
+	image_url = "'http://' + i"
+	headers ={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36'}
+	r = requests.get(image_url,headers=headers)
+	f = open("i.jpg", 'wb')
+	f.write(r.content)
+	f.close()
 
 #直接从相关链接下载图片（要补充http://，是不是可以‘http://’+'抽取出来的链接')
 image_url='http://ci.xiaohongshu.com/5b123788-3c47-8610-e910-a37c6dc3be4f?imageView2/2/w/1080/format/jpg'
