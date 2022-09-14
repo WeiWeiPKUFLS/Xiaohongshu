@@ -9,7 +9,7 @@ non_bmp_map = dict.fromkeys(range(0x10000,sys.maxunicode + 1),0xfffd)
 f = open('mainnote2.txt','a',encoding='utf-8')
 
 #引入离线的网页
-soup = BeautifulSoup(open("/Users/weiwei/Documents/test webscrapping/2.html"))
+soup = BeautifulSoup(open("/Users/weiwei/Documents/test webscraping/2.html"))
 #抽取笔记的标题
 title = soup.find('div', class_ = 'note-top').find('h1', class_ = 'title').get_text()
 f.write('(title)'+ title + '\n')
