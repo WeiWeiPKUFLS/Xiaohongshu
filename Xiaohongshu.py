@@ -28,6 +28,32 @@ f.write('(publishdate)' + publishdate + '\n')
 
 f.close()
 
+#抽取评论(需要对应用户，时间，然后还有下属的评论)
+comments = []
+replies = soup.find('div', class_='all-tip').find_all('p', class_='content')
+for reply in replies:
+    comment = reply.text
+    print(comment)
+    comments.append(comment)
+for cc in comments:
+	f.write('(top5comments)' + cc + '\n')
+
+usernames = soup.find_all('h4', class_="user-nickname")
+commenters = []
+for i in usernames:
+    name = i.text
+    nam = name.translate(non_bmp_map)
+    print (nam)
+    commenters.append(nam)
+
+#对应评论和评论者
+import pandas as pd
+commentdata = pd.DataFrame({'commenters':commenters,'comments':comments})
+commentdata.to_csv('participant 1 self-selected note 7 comment data.csv',index=False,encoding='utf_8_sig')
+
+
+
+
 #抽取视频
 videoSrc = soup.find('div', class_ = 'videoframe').find('video').get('src')
 urllib.request.urlretrieve(videoSrc,'participant 1 self-selected 7.mp4')
