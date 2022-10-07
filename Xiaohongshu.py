@@ -5,6 +5,7 @@ import bs4
 from bs4 import BeautifulSoup
 import requests
 import sys
+import urllib.request
 non_bmp_map = dict.fromkeys(range(0x10000,sys.maxunicode + 1),0xfffd)
 f = open('mainnote2.txt','a',encoding='utf-8')
 
@@ -21,9 +22,21 @@ for note in notetext:
     paragraphs.append(para)
 for pp in paragraphs:
 	f.write(pp + '\n') 
+#抽取发布时间
+publishdate = soup.find('div', class_ = 'publish-date').get_text()
+f.write('(publishdate)' + publishdate + '\n')
 
 f.close()
 
+#抽取视频
+videoSrc = soup.find('div', class_ = 'videoframe').find('video').get('src')
+urllib.request.urlretrieve(videoSrc,'participant 1 self-selected 7.mp4')
+
+#抽取视频transcript
+f2 = open('participant 1 self-selected note 7 transcript.txt', 'a', encoding='utf-8')
+transcript = soup.find('p', class_ = 'generated-text').get_text()
+f2.write('(transcript)' + transcript + '\n')
+f2.close()
 
 #抽取图片
 image = soup.find('div', class_ = 'inner').find_all('style')
