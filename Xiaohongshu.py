@@ -7,10 +7,10 @@ import requests
 import sys
 import urllib.request
 non_bmp_map = dict.fromkeys(range(0x10000,sys.maxunicode + 1),0xfffd)
-f = open('mainnote2.txt','a',encoding='utf-8')
+f = open('Blogger A self-selected note 7 text.txt','a',encoding='utf-8')
 
 #引入离线的网页
-soup = BeautifulSoup(open("/Users/weiwei/Documents/test webscraping/2.html"))
+soup = BeautifulSoup(open("/Users/weiwei/Documents/Blogger A/Self-selected note 7.html"))
 #抽取笔记的标题
 title = soup.find('div', class_ = 'note-top').find('h1', class_ = 'title').get_text()
 f.write('(title)'+ title + '\n')
@@ -49,7 +49,7 @@ for replytime in replytimes:
     commenttimes.append(commenttime)
 import pandas as pd
 commentdata = pd.DataFrame({'commenters':commenters,'comments':comments, 'comment-time': commenttimes})
-commentdata.to_csv('participant 1 self-selected note 7 text.txt',index=False,encoding='utf_8_sig', mode='a')
+commentdata.to_csv('Blogger A self-selected note 7 text.txt',index=False,encoding='utf_8_sig', mode='a')
 
 #处理评论的评论
 subcomments = []
@@ -66,13 +66,13 @@ for subreplier in subrepliers:
     print(suber)
     subcommenters.append(suber)
 subcommentdata = pd.DataFrame({'subcommenters': subcommenters,'subcomments': subcomments})
-subcommentdata.to_csv('participant 1 self-selected note 7 text.txt',index=False,encoding='utf_8_sig', mode='a')
+subcommentdata.to_csv('Blogger A self-selected note 7 text.txt',index=False,encoding='utf_8_sig', mode='a')
 
 #视频下载
 videoSrc = soup.find('div', class_ = 'videoframe').find('video').get('src')
-urllib.request.urlretrieve(videoSrc,'participant 1 self-selected 7.mp4')
+urllib.request.urlretrieve(videoSrc,'Blogger A self-selected note 7.mp4')
 #抽取video transcript
-f2 = open('participant 1 self-selected note 7 transcript.txt', 'a', encoding='utf-8')
+f2 = open('Blogger A self-selected note 7 transcript.txt', 'a', encoding='utf-8')
 transcript = soup.find('p', class_ = 'generated-text').get_text()
 f2.write('(transcript)' + transcript + '\n')
 f2.close()
