@@ -65,7 +65,7 @@ for subreplier in subrepliers:
     suber = subreplier.text
     print(suber)
     subcommenters.append(suber)
-subcommentdata = pd.DataFrame({'subcomments': subcomments, 'subcommenters': subcommenters})
+subcommentdata = pd.DataFrame({'subcommenters': subcommenters,'subcomments': subcomments})
 subcommentdata.to_csv('participant 1 self-selected note 7 text.txt',index=False,encoding='utf_8_sig', mode='a')
 
 #视频下载
