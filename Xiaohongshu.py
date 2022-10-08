@@ -38,7 +38,7 @@ commenters = []
 usernames = soup.find_all('h4', class_="user-nickname")
 for i in usernames:
     name = i.text
-    nam = name.translate(non_bmp_map)
+    nam = name.translate(non_bmp_map) + ':'
     print (nam)
     commenters.append(nam)
 commenttimes = []
