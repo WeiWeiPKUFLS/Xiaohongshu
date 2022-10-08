@@ -41,7 +41,7 @@ for i in usernames:
     nam = name.translate(non_bmp_map)
     print (nam)
     commenters.append(nam)
-commenttime = []
+commenttimes = []
 replytimes = soup.find_all('span', class_="publish-time")
 for replytime in replytimes:
     commenttime = replytime.text
