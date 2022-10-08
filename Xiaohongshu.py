@@ -25,7 +25,6 @@ for pp in paragraphs:
 #抽取发布时间
 publishdate = soup.find('div', class_ = 'publish-date').get_text()
 f.write('(publishdate)' + publishdate + '\n')
-
 f.close()
 
 #抽取评论(需要对应用户，时间，然后还有下属的评论)
@@ -35,22 +34,46 @@ for reply in replies:
     comment = reply.text
     print(comment)
     comments.append(comment)
-for cc in comments:
-	f.write('(top5comments)' + cc + '\n')
-
-usernames = soup.find_all('h4', class_="user-nickname")
 commenters = []
+usernames = soup.find_all('h4', class_="user-nickname")
 for i in usernames:
     name = i.text
     nam = name.translate(non_bmp_map)
     print (nam)
     commenters.append(nam)
-
-#对应评论和评论者
+commenttime = []
+replytimes = soup.find_all('span', class_="publish-time")
+for replytime in replytimes:
+    commenttime = replytime.text
+    print(commenttime)
+    commenttimes.append(commenttime)
 import pandas as pd
-commentdata = pd.DataFrame({'commenters':commenters,'comments':comments})
-commentdata.to_csv('participant 1 self-selected note 7 comment data.csv',index=False,encoding='utf_8_sig')
+commentdata = pd.DataFrame({'commenters':commenters,'comments':comments, 'comment-time': commenttimes})
+commentdata.to_csv('participant 1 self-selected note 7 text.txt',index=False,encoding='utf_8_sig', mode='a')
 
+#处理评论的评论
+subcomments = []
+subcommenters = []
+subreplies = soup.find('div', class_='all-tip').find_all('p', class_='reply-content')
+for subreply in subreplies:
+    subrep = subreply.text
+    print(subrep)
+    subcomments.append(subrep)
+
+subrepliers = soup.find('div', class_='all-tip').find_all('span', class_='replier')
+for subreplier in subrepliers:
+    suber = subreplier.text
+    print(suber)
+    subcommenters.append(suber)
+
+#视频下载
+videoSrc = soup.find('div', class_ = 'videoframe').find('video').get('src')
+urllib.request.urlretrieve(videoSrc,'participant 1 self-selected 7.mp4')
+#抽取video transcript
+f2 = open('participant 1 self-selected note 7 transcript.txt', 'a', encoding='utf-8')
+transcript = soup.find('p', class_ = 'generated-text').get_text()
+f2.write('(transcript)' + transcript + '\n')
+f2.close()
 
 
 
