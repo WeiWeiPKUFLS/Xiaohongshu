@@ -4,14 +4,9 @@ import jieba
 text_from_file_with_apath = open('search and discovery3.txt').read()
 wordlist_after_jieba = jieba.cut(text_from_file_with_apath, cut_all = True)
 wl_space_split = " ".join(wordlist_after_jieba)
-Building prefix dict from the default dictionary ...
-Loading model from cache /var/folders/62/37jjdz692cs6r2j7dy32jw600000gn/T/jieba.cache
-Loading model cost 0.308 seconds.
 Prefix dict has been built successfully.
-stop_words = open(r"HIT Stopwords.txt",encoding ="utf-8").read().split("\n")
+stop_words = open(r"Baidu Stopwords.txt",encoding ="utf-8").read().split("\n")
 my_wordcloud = WordCloud(font_path = 'Songti.ttc', stopwords=stop_words, background_color="white").generate(wl_space_split)
 plt.imshow(my_wordcloud)
-<matplotlib.image.AxesImage object at 0x12105eb90>
 plt.axis("off")
-(-0.5, 399.5, 199.5, -0.5)
 plt.show()
