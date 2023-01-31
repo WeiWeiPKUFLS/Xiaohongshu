@@ -9,3 +9,6 @@ my_wordcloud = WordCloud(font_path = 'Songti.ttc', stopwords=stop_words, backgro
 plt.imshow(my_wordcloud)
 plt.axis("off")
 plt.show()
+
+
+
