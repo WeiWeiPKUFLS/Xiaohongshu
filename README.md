@@ -4,7 +4,7 @@ This repository consists of Python programs I developed for data collection and 
 Please DO NOT use the programs for commercial purposes.
 
 
-Contact me: viviweiwei@pku.edu.cn or viviweiwei@kcl.ac.uk to seek permission to use the programs for other research projects. I will also provide further information on how to use them.
+Contact me: viviweiwei@pku.edu.cn or viviweiwei@kcl.ac.uk to seek permission to use the programs for research or academic learning. I will also provide further information on how to use them.
 
 
 Thank you!
