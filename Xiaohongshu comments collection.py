@@ -1,32 +1,47 @@
-import os
 import json
 import pandas as pd
-all_files = os.listdir('/comment')
-all_files = os.listdir('/Users/weiwei/Documents/comment')
-all_paths = []
-contents = []
+from datetime import datetime
 
-all_files = [f for f in os.listdir('/Users/weiwei/Documents/comment')]
-for i in all_files:
-    all_paths.append(os.path.join('./comment/', i))
+#打开本地的json文件
+with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
 
+#提取评论并存进txt里面
+comments = []
+for comment in data['data']['comments']:
+    sub_comments_list = []
+    for sub_comment in comment.get('sub_comments', []):
+        sub_create_time = datetime.fromtimestamp(sub_comment['create_time'] // 1000)
+        sub_comments_list.append([sub_comment['content'], 
+                                  sub_comment['user_info']['nickname'], 
+                                  sub_create_time.strftime("%d/%m/%Y %H:%M")])
+        
+    create_time = datetime.fromtimestamp(comment['create_time'] // 1000)
+    like_count = comment.get('like_count', None)
+    comments.append([comment['content'], 
+                     comment['user_info']['nickname'], 
+                     create_time.strftime("%d/%m/%Y %H:%M"),
+                     like_count,
+                     sub_comments_list])
 
-for path in all_paths:
-    with open(path, encoding = 'unicode_escape') as f:
-        contents.append(f.read())
+# Create a DataFrame
+df = pd.DataFrame(comments, columns=['content', 'nickname', 'create_time', 'like_count', 'sub_comments'])
 
-
-
-import json
-import jsonpath
-import pandas as pd
-comment_file = json.load(open('/Users/weiwei/Documents/comment/Blogger case 1 comments.json', 'r', encoding='utf-8'))
-comment_content = jsonpath.jsonpath(comment_file, '$..content')
-user_name = jsonpath.jsonpath(obj, '$..user_info[nickname]')
-
-maincomments = jsonpath.jsonpath(obj, '$.data.comments[*].content')
-maincommenters = jsonpath.jsonpath(obj, '$..data.comments[*].user_info[nickname]')
-maincomment_like = jsonpath.jsonpath(obj, '$..data.comments[*].like_count')
+# Save to a TXT file
+with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.txt', 'w', encoding='utf-8') as f:
+    for i, row in df.iterrows():
+        f.write(f"{i+1}. {row['content']}\n")
+        f.write(f"   Posted by: {row['nickname']} on {row['create_time']}\n")
+        if not pd.isna(row['like_count']):
+            f.write(f"   Likes: {row['like_count']}\n")
+        if not row['sub_comments']:
+            f.write("   No sub-comments\n")
+        else:
+            f.write("   Sub-comments:\n")
+            for j, sub_comment in enumerate(row['sub_comments']):
+                f.write(f"     {j+1}. {sub_comment[0]} \n")
+                f.write(f"         Posted by: {sub_comment[1]} on {sub_comment[2]}\n")
+        f.write("\n")
 
 
 #提取评论的日期，并转换成正确日期格式
