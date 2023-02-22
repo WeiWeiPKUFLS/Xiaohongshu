@@ -28,7 +28,7 @@ for comment in data['data']['comments']:
 df = pd.DataFrame(comments, columns=['content', 'nickname', 'create_time', 'like_count', 'sub_comments'])
 
 # 保存为txt文件
-with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.txt', 'w', encoding='utf-8') as f:
+with open('/Users/weiwei/Documents/comment/Blogger case 1.txt', 'a', encoding='utf-8') as f:
     for i, row in df.iterrows():
         f.write(f"{i+1}. {row['content']}\n")
         f.write(f"   Posted by: {row['nickname']} on {row['create_time']}\n")
@@ -42,21 +42,6 @@ with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.txt', 'w', en
                 f.write(f"     {j+1}. {sub_comment[0]} \n")
                 f.write(f"         Posted by: {sub_comment[1]} on {sub_comment[2]}\n")
         f.write("\n")
-
-
-#提取评论的日期，并转换成正确日期格式
-import datetime
-maincomment_jason_time = jsonpath.jsonpath(obj, '$..data.comments[*].create_time')
-timestamps = maincomment_jason_time
-# convert timestamps to datetime objects with hours, minutes, and seconds
-maincomment_datetimes = []
-for ts in maincomment_jason_time:
-    dt = datetime.datetime.fromtimestamp(ts/1000.0)
-    maincomment_datetimes.append(dt)
-# convert datetimes to strings with format YYYY-MM-DD HH:MM:SS
-maincomment_time = [dt.strftime('%Y-%m-%d %H:%M:%S') for dt in maincomment_datetimes]
-# print list of datetime strings
-print(maincomment_time)
 
 
 #如果我只想要日期就用这个
