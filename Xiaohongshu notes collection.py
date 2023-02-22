@@ -10,21 +10,23 @@ non_bmp_map = dict.fromkeys(range(0x10000,sys.maxunicode + 1),0xfffd)
 f = open('Blogger case 1 testing.txt','a',encoding='utf-8')
 
 #引入离线的网页
-soup = BeautifulSoup(open("/Users/weiwei/Documents/Blogger case 1.html"))
+soup = BeautifulSoup(open("/Users/weiwei/Documents/Blogger case 1.html"), features="html.parser")
 #抽取笔记的标题
 title = soup.find('div', class_ = 'note-content').find('div', class_ = 'title').get_text()
-f.write('Title:'+ title + '\n')
+f.write('Title: '+ title + '\n')
 #抽取笔记正文
 content = soup.find('div', class_ = 'note-content').find('div', class_ = 'desc').get_text('\n','<br>')
-f.write('Title:'+ title + '\n')
+f.write('Content: '+ content + '\n')
 #抽取hashtags
 hashtags = soup.find(attrs={"name":"keywords"})['content']
-f.write('Hashtags' + hashtags + '\n')
+f.write('Hashtags: ' + hashtags + '\n')
 
 #抽取发布时间
 publishdate = soup.find('div', class_ = 'date').get_text()
-f.write('Publishdate:' + publishdate + '\n')
+f.write('Publishdate: ' + publishdate + '\n')
 f.close()
+
+
 
 #抽取评论(需要对应用户，时间，然后还有下属的评论)
 comments = []
