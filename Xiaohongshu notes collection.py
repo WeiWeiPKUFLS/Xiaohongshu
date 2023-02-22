@@ -7,24 +7,23 @@ import requests
 import sys
 import urllib.request
 non_bmp_map = dict.fromkeys(range(0x10000,sys.maxunicode + 1),0xfffd)
-f = open('Blogger A self-selected note 7 text.txt','a',encoding='utf-8')
+f = open('Blogger case 1 testing.txt','a',encoding='utf-8')
 
 #引入离线的网页
-soup = BeautifulSoup(open("/Users/weiwei/Documents/Blogger data/Blogger A/Self-selected note 3.html"), features="lxml")
+soup = BeautifulSoup(open("/Users/weiwei/Documents/Blogger case 1.html"))
 #抽取笔记的标题
-title = soup.find('div', class_ = 'note-top').find('h1', class_ = 'title').get_text()
-f.write('(title)'+ title + '\n')
+title = soup.find('div', class_ = 'note-content').find('div', class_ = 'title').get_text()
+f.write('Title:'+ title + '\n')
 #抽取笔记正文
-paragraphs = []
-notetext = soup.find('div', class_ = 'content').find_all('p')
-for note in notetext:
-    para = note.text
-    paragraphs.append(para)
-for pp in paragraphs:
-	f.write(pp + '\n') 
+content = soup.find('div', class_ = 'note-content').find('div', class_ = 'desc').get_text('\n','<br>')
+f.write('Title:'+ title + '\n')
+#抽取hashtags
+hashtags = soup.find(attrs={"name":"keywords"})['content']
+f.write('Hashtags' + hashtags + '\n')
+
 #抽取发布时间
-publishdate = soup.find('div', class_ = 'publish-date').get_text()
-f.write('(publishdate)' + publishdate + '\n')
+publishdate = soup.find('div', class_ = 'date').get_text()
+f.write('Publishdate:' + publishdate + '\n')
 f.close()
 
 #抽取评论(需要对应用户，时间，然后还有下属的评论)
