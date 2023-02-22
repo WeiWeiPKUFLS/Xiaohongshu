@@ -6,7 +6,7 @@ from datetime import datetime
 with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
-#提取评论并存进txt里面
+#提取评论的内容
 comments = []
 for comment in data['data']['comments']:
     sub_comments_list = []
@@ -24,10 +24,10 @@ for comment in data['data']['comments']:
                      like_count,
                      sub_comments_list])
 
-# Create a DataFrame
+# 存进一个DataFrame里面
 df = pd.DataFrame(comments, columns=['content', 'nickname', 'create_time', 'like_count', 'sub_comments'])
 
-# Save to a TXT file
+# 保存为txt文件
 with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.txt', 'w', encoding='utf-8') as f:
     for i, row in df.iterrows():
         f.write(f"{i+1}. {row['content']}\n")
