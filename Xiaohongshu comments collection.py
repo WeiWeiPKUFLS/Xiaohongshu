@@ -3,7 +3,8 @@ import pandas as pd
 from datetime import datetime
 
 #打开本地的json文件
-with open('/Users/weiwei/Documents/comment/Blogger case 1 comments.json', 'r', encoding='utf-8') as f:
+#1要改地址
+with open('/Users/weiwei/Documents/comment/Blogger case 2 comments.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 #提取评论的内容
@@ -12,9 +13,10 @@ for comment in data['data']['comments']:
     sub_comments_list = []
     for sub_comment in comment.get('sub_comments', []):
         sub_create_time = datetime.fromtimestamp(sub_comment['create_time'] // 1000)
+        sub_like_count = sub_comment.get('like_count', None)
         sub_comments_list.append([sub_comment['content'], 
                                   sub_comment['user_info']['nickname'], 
-                                  sub_create_time.strftime("%d/%m/%Y %H:%M")])
+                                  sub_create_time.strftime("%d/%m/%Y %H:%M"),sub_like_count])
         
     create_time = datetime.fromtimestamp(comment['create_time'] // 1000)
     like_count = comment.get('like_count', None)
@@ -28,20 +30,22 @@ for comment in data['data']['comments']:
 df = pd.DataFrame(comments, columns=['content', 'nickname', 'create_time', 'like_count', 'sub_comments'])
 
 # 保存为txt文件
-with open('/Users/weiwei/Documents/comment/Blogger case 1.txt', 'a', encoding='utf-8') as f:
+#2要改地址
+with open('/Users/weiwei/Documents/comment/Blogger case 2.txt', 'a', encoding='utf-8') as f:
     for i, row in df.iterrows():
         f.write(f"{i+1}. {row['content']}\n")
-        f.write(f"   Posted by: {row['nickname']} on {row['create_time']}\n")
+        f.write(f"   Posted by: {row['nickname']} on {row['create_time']},")
         if not pd.isna(row['like_count']):
-            f.write(f"   Likes: {row['like_count']}\n")
+            f.write(f" Likes: {row['like_count']}\n")
         if not row['sub_comments']:
             f.write("   No sub-comments\n")
         else:
             f.write("   Sub-comments:\n")
             for j, sub_comment in enumerate(row['sub_comments']):
                 f.write(f"     {j+1}. {sub_comment[0]} \n")
-                f.write(f"         Posted by: {sub_comment[1]} on {sub_comment[2]}\n")
+                f.write(f"         Posted by: {sub_comment[1]} on {sub_comment[2]}, Likes: {sub_comment[3]}\n")
         f.write("\n")
+
 
 
 #如果我只想要日期就用这个
