@@ -4,7 +4,8 @@ import pandas as pd
 import re
 from datetime import datetime
 
-directory = '/Users/weiwei/Documents/Atian/Video notes 15Mar23'
+#记得改博主文件夹
+directory = '/Users/weiwei/Documents/Miaoyan/Video notes 16Mar23'
 
 df = pd.DataFrame(columns=['note_type', 'title', 'liked_count', 'collected_count', 'comments_count', 'thumb', 'webpage_url', 'time', 'last_update_time', 'duration', 'identifier'])
 
@@ -46,6 +47,7 @@ for filename in os.listdir(directory):
                             }
                     df = pd.concat([df, pd.DataFrame(new_row, index=[0])], ignore_index=True)
 
-# Drop the 'identifier' column before saving to CSV
+# Drop the 'identifier' column before saving to CSV记得改博主文件夹
 df.drop(columns=['identifier'], inplace=True)
-df.to_csv('/Users/weiwei/Documents/Atian/Video notes 15Mar23/output.csv', encoding='utf-8-sig', index=False)
+df.to_csv('/Users/weiwei/Documents/Miaoyan/Video notes 16Mar23/Video notes list output 16Mar23.csv', encoding='utf-8-sig', index=False)
+
