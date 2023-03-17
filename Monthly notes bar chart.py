@@ -38,3 +38,24 @@ plt.xticks(rotation=45)
 
 # Show the plot
 plt.show()
+
+
+
+
+
+# Create a line chart
+plt.plot(url_count_dict.keys(), url_count_dict.values())
+
+# Add text labels to the data points
+for i, v in enumerate(url_count_dict.values()):
+    plt.text(i, v, str(v), ha='center', va='bottom')
+
+# Add x-label and y-label
+plt.xlabel('Month and Year')
+plt.ylabel('Number of Notes')
+
+# Rotate the x-axis labels
+plt.xticks(rotation=45)
+
+# Show the plot
+plt.show()
