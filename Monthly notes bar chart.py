@@ -34,8 +34,7 @@ plt.xlabel('Month and Year')
 plt.ylabel('Number of Notes')
 
 # Rotate the x-axis labels
-plt.xticks(rotation=90)
+plt.xticks(rotation=45)
 
 # Show the plot
 plt.show()
-
