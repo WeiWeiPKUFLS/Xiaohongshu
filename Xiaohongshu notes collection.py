@@ -78,7 +78,7 @@ with open('/Users/weiwei/Documents/comment/Blogger case 2 videothumbnail.jpg', '
 	
 
 
-	
+#批量处理同一个文件夹的内容	
 	
 	
 	
