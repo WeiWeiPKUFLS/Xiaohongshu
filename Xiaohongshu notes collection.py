@@ -79,7 +79,136 @@ with open('/Users/weiwei/Documents/comment/Blogger case 2 videothumbnail.jpg', '
 
 
 #批量处理同一个文件夹的内容	
-	
+#图文笔记
+import os
+import sys
+import urllib.request
+from datetime import datetime
+import bs4
+import requests
+from bs4 import BeautifulSoup
+
+non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
+
+# directory where the HTML files are stored记得改地址
+directory = "/Users/weiwei/Documents/Participant notes/Pax/Pax photo-text"
+
+# loop through all the HTML files in the directory
+for filename in os.listdir(directory):
+    if filename.endswith(".html"):
+        html_file = os.path.join(directory, filename)
+        txt_file = os.path.splitext(html_file)[0] + ".txt"
+        image_directory = directory
+
+        # open the HTML file and create a BeautifulSoup object
+        with open(html_file, encoding='utf-8') as f:
+            soup = BeautifulSoup(f, features="html.parser")
+
+        # extract the note title, main text, hashtags, and publish date
+        title = soup.find('div', class_='note-content').find('div', class_='title').get_text()
+        content = soup.find('div', class_='note-content').find('div', class_='desc').get_text('\n', '<br>')
+        hashtags = soup.find(attrs={"name": "keywords"})['content']
+        date = soup.find('div', class_='date').get_text()
+        
+        # handle different date formats
+        try:
+            formatdate = datetime.strptime(date, '%Y-%m-%d')
+        except ValueError:
+            formatdate = datetime.strptime('2023-' + date, '%Y-%m-%d')
+        
+        publishdate = formatdate.strftime('%d/%m/%Y')
+
+        # write the extracted data to the corresponding txt file
+        with open(txt_file, 'w', encoding='utf-8') as f:
+            f.write('Title: ' + title + '\n\n')
+            f.write('Main text: ' + content + '\n\n')
+            f.write('Hashtags: ' + hashtags + '\n\n')
+            f.write('Publishdate: ' + publishdate + '\n\n')
+
+        # extract the image URLs and download the images
+        urls = []
+        for div in soup.find_all("div", class_="swiper-slide zoom-in"):
+            style_attr = div.get("style")
+            url = style_attr.split("(")[-1].split(")")[0]
+            urls.append(url)
+
+        for i, url in enumerate(urls):
+            response = requests.get(url)
+            filename = os.path.splitext(os.path.basename(html_file))[0] + f" - {i+1}.jpg"
+            filename = os.path.join(image_directory, filename.replace("--", "-"))
+            with open(filename, 'wb') as f:
+                f.write(response.content)
+
+        f.close()
+
+
+
+#视频笔记
+import os
+import re
+import urllib.parse
+import urllib.request
+
+import requests
+from bs4 import BeautifulSoup
+
+
+# Define the input and output directories改地址
+input_dir = "/Users/weiwei/Documents/Participant notes/Xueer/Xueer video"
+output_dir = "/Users/weiwei/Documents/Participant notes/Xueer/Xueer video"
+
+# Loop through all the HTML files in the input directory
+for filename in os.listdir(input_dir):
+    if filename.endswith(".html"):
+        # Create the file paths for the HTML, text, video, and thumbnail image files
+        html_filepath = os.path.join(input_dir, filename)
+        text_filepath = os.path.join(output_dir, os.path.splitext(filename)[0] + ".txt")
+        video_filepath = os.path.join(output_dir, os.path.splitext(filename)[0] + ".mp4")
+        thumbnail_filepath = os.path.join(output_dir, os.path.splitext(filename)[0] + "_thumbnail.jpg")
+
+        # Open the HTML file with BeautifulSoup
+        with open(html_filepath, encoding="utf-8") as f:
+            soup = BeautifulSoup(f, "html.parser")
+
+        # Extract the note title, content, hashtags, and publish date
+        title = soup.find("div", class_="note-content").find("div", class_="title").get_text()
+        content = soup.find("div", class_="note-content").find("div", class_="desc").get_text("\n", "<br>")
+        hashtags = soup.find(attrs={"name": "keywords"})["content"]
+        publishdate = soup.find("div", class_="date").get_text()
+
+        # Write the note title, content, hashtags, and publish date to a text file
+        with open(text_filepath, "w", encoding="utf-8") as f:
+            f.write(f"Title: {title}\n\n")
+            f.write(f"Main text: {content}\n\n")
+            f.write(f"Hashtags: {hashtags}\n\n")
+            f.write(f"Publishdate: {publishdate}\n\n")
+
+        # Extract the video URL from the HTML file
+        script_element = soup.select_one("body > script:nth-child(3)")
+        script_text = script_element.string
+        json_str = script_text.split("window.__INITIAL_STATE__=")[1]
+        pattern = r'"backupUrls":\s*\[([\s\S]*?)\]'
+        backup_urls_str = re.search(pattern, json_str).group(1)
+        first_backup_url = backup_urls_str.strip('"').split(",")[0].strip().rstrip('"')
+        decoded_url = urllib.parse.unquote(first_backup_url)
+        decoded_url = first_backup_url.encode().decode("unicode_escape")
+        decoded_url = decoded_url.replace("\\", "")
+
+        # Download the video and save it to a file
+        response = requests.get(decoded_url)
+        with open(video_filepath, "wb") as f:
+            f.write(response.content)
+
+        # Extract the video thumbnail URL from the HTML file
+        for match in re.finditer('"url":"(.*?)"', script_text):
+            image_url = match.group(1).encode().decode("unicode_escape")
+
+        # Download the video thumbnail and save it to a file
+        response = requests.get(image_url)
+        with open(thumbnail_filepath, "wb") as f:
+            f.write(response.content)
+
+
 	
 	
 	
