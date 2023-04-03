@@ -1,0 +1,48 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Import the data from the CSV
+df = pd.read_csv('/Users/weiwei/Documents/time range bar chart.csv')
+
+# Convert the "Time of posting" column to datetime format
+df['Time of posting'] = pd.to_datetime(df['Time of posting'], format='%d/%m/%Y')
+
+# Find the earliest and latest month and year across all participants
+earliest_date = df['Time of posting'].min()
+latest_date = df['Time of posting'].max()
+range_across_all = pd.date_range(start=earliest_date.replace(day=1), end=latest_date.replace(day=1), freq='MS')
+
+# Find the earliest and latest month and year for each participant
+participant_ranges = {}
+for participant in df['Participant'].unique():
+    participant_df = df[df['Participant'] == participant]
+    earliest_date = participant_df['Time of posting'].min()
+    latest_date = participant_df['Time of posting'].max()
+    participant_ranges[participant] = pd.date_range(start=earliest_date.replace(day=1), end=latest_date.replace(day=1), freq='MS')
+
+# Create the bar chart
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# Add bars for each participant
+for i, (participant, ranges) in enumerate(participant_ranges.items()):
+    y = [participant]*len(ranges)
+    x = [range_across_all.get_loc(date) for date in ranges]
+    ax.bar(x, [1]*len(ranges), bottom=i, width=1, edgecolor='black', linewidth=0.5)
+
+# Set the x-axis ticks and labels
+x_ticks = list(range_across_all.to_period('M').astype(str))
+ax.set_xticks(range(len(range_across_all)))
+ax.set_xticklabels(x_ticks, rotation=90)
+
+# Set the y-axis ticks and labels
+y_ticks = list(participant_ranges.keys())
+ax.set_yticks(list(range(len(participant_ranges))))
+ax.set_yticklabels(y_ticks)
+
+# Set the axis labels and title
+ax.set_xlabel('Month and Year')
+ax.set_ylabel('Participant')
+ax.set_title('Time Ranges')
+
+# Show the plot
+plt.show()
